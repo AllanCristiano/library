@@ -2,12 +2,14 @@ package allancristiano.library.services;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import allancristiano.library.domain.author.Author;
 import allancristiano.library.repositories.AuthorRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService {
@@ -17,39 +19,42 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    public String saveAuthor(Author author){        
+    @Transactional
+    public Author saveAuthor(Author author) {
+        return authorRepository.save(author);
+    }
 
-        try {
-            authorRepository.save(author);
-            return "Cadastro Realizado";
-        } catch (Exception e) {
-            return "Erro: " + e;
+    // Método para listar todos os autores
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
+    }
+
+    // Método para buscar um autor pelo ID
+    public Optional<Author> getAuthorById(UUID id) {
+        return authorRepository.findById(id);
+    }
+
+    // Método para atualizar um autor
+    @Transactional
+    public Author updateAuthor(UUID id, Author authorDetails) {
+        Optional<Author> authorOptional = authorRepository.findById(id);
+        if (authorOptional.isPresent()) {
+            Author author = authorOptional.get();
+            author.setName(authorDetails.getName());
+            author.setNationality(authorDetails.getNationality());
+            return authorRepository.save(author);
+        } else {
+            throw new IllegalArgumentException("Autor não encontrado");
         }
-        
     }
 
-    public List<Author> listAuthor(){
-        List<Author> authors = authorRepository.findAll();
-        return authors;
-    }
-
-
-    public String authorUpdate(Author author){
-        try {
-            authorRepository.save(author);
-            return "Atualização Realizada";
-        } catch (Exception e) {
-            return "Erro: " + e;
-        }        
-    }
-
-    public String authorDeleteById(UUID id){
-        try {
+    // Método para deletar um autor
+    @Transactional
+    public void deleteAuthor(UUID id) {
+        if (authorRepository.existsById(id)) {
             authorRepository.deleteById(id);
-            return "Author Deletado";
-        } catch (Exception e) {
-            return "Erro: " + e;
+        } else {
+            throw new IllegalArgumentException("Autor não encontrado");
         }
     }
-    
 }
