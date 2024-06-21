@@ -1,6 +1,7 @@
 package allancristiano.library.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -52,5 +53,10 @@ public class BookService {
         } catch (Exception e) {
             return "Erro: " + e;
         }
+    }
+
+    public Optional<Book> bookFindById(UUID id){
+      Optional<Book> book = bookRepository.findById(id);
+      return book;
     }
 }
