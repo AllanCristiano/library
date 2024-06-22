@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import allancristiano.library.domain.book.Book;
 import allancristiano.library.repositories.BookRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class BookService {
@@ -18,17 +19,18 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public String booksave(Book book){
+    @Transactional
+    public Book booksave(Book book){
         try {
             if(book.getAuthor() != null){
-                bookRepository.save(book);
-                return "Livro cadastrado";
+               return bookRepository.save(book);
+                
             }else{
-                return "Author não encontrado";
+                throw new IllegalArgumentException("Autor não encontrado");
             }
             
         } catch (Exception e) {
-            return "Erro: "  + e;
+            throw new IllegalArgumentException("Cadastro não realizado");
         }
     }
     
@@ -37,24 +39,25 @@ public class BookService {
         return books;
     }
 
-    public String bookUpdate(Book book){
+    public Book bookUpdate(Book book){
         try {
-            bookRepository.save(book);
-            return "Livro atualizado";
+            return bookRepository.save(book);
+            
         } catch (Exception e) {
-            return "Erro: " + e;
+            throw new IllegalArgumentException("Falha na atualização");
         }
     }
 
-    public String bookDelete(UUID id){
-        try {
+    @Transactional
+    public void bookDelete(UUID id){
+        if (bookRepository.existsById(id)) {
             bookRepository.deleteById(id);
-            return "Livro deletado";
-        } catch (Exception e) {
-            return "Erro: " + e;
+        }else{
+            throw new IllegalArgumentException("Livro não encontrado");
         }
     }
 
+    
     public Optional<Book> bookFindById(UUID id){
       Optional<Book> book = bookRepository.findById(id);
       return book;
