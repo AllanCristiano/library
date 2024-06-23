@@ -35,3 +35,21 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    
 3. **Acesse a aplicação: Acesse a aplicação em http://localhost:8080 do navegador.**
 
+## API Endpoints
+
+### Author Endpoints
+
+A seguir estão os endpoints disponíveis para gerenciar autores no sistema.
+
+#### Criar Autor
+
+- **URL:** `/api/authors`
+- **Método:** `POST`
+- **Descrição:** Cria um novo autor.
+- **Request Body:**
+  ```json
+  {
+    "name": "Nome do Autor",
+    "birthDate": "YYYY-MM-DD"
+  }
+
