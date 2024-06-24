@@ -50,6 +50,6 @@ A seguir estão os endpoints disponíveis para gerenciar autores no sistema.
   ```json
   {
     "name": "Nome do Autor",
-    "birthDate": "YYYY-MM-DD"
+    "nationality": "Nacionalidade"
   }
 
